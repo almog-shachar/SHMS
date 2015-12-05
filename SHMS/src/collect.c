@@ -38,16 +38,6 @@ typedef struct{
 
 } uart_dev;
 
-typedef struct{
-	int Xpos;
-	int Ypos;
-	int Zpos;
-	int Xval;
-	int Yval;
-	int Zval;
-	int GPSTime;
-	int ready;
-} GPS_struct;
 
 uart_dev uart_devices[UART_DEVS_IN_SYSTEM];
 
@@ -197,7 +187,7 @@ rtems_task Task_Init_GPS()
 	{
 		printf("Error on open");
 		strerror(errno);
-		monitoredc[GPS1] = 0;
+		irrisponsive[GPS1] = 1;
 
 	}
 
@@ -214,14 +204,16 @@ rtems_task Task_Collect_GPS ()
 	GPS_struct* GPS_data;
 	while( monitoredc[GPS1] )
 	{
-		*GPS_data = (GPS_struct)malloc(sizeof(GPS_struct));	// allocate memory for gps data node
-		request_info(UART_C, GPS_data->Xpos, Xpos_request);	// retrieve gps data
-		request_info(UART_C, GPS_data->Ypos, Ypos_request);
-		request_info(UART_C, GPS_data->Zpos, Zpos_request);
-		request_info(UART_C, GPS_data->Xval, Xval_request);
-		request_info(UART_C, GPS_data->Yval, Yval_request);
-		request_info(UART_C, GPS_data->Zval, Zval_request);
-		request_info(UART_C, GPS_data->GPSTime, GPSTime_request);
+		if( (*GPS_data = (GPS_struct)malloc(sizeof(GPS_struct))) != NULL)	// allocate memory for gps data node
+		{
+			request_info(UART_C, GPS_data->Xpos, Xpos_request);	// retrieve gps data
+			request_info(UART_C, GPS_data->Ypos, Ypos_request);
+			request_info(UART_C, GPS_data->Zpos, Zpos_request);
+			request_info(UART_C, GPS_data->Xval, Xval_request);
+			request_info(UART_C, GPS_data->Yval, Yval_request);
+			request_info(UART_C, GPS_data->Zval, Zval_request);
+			request_info(UART_C, GPS_data->GPSTime, GPSTime_request);
+		}
 		enq((void*)GPS_data); // enqueue for processing
 		sleep(180); // next collection phase in 3 minutes.
 	}
