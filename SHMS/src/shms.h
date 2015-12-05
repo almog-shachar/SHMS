@@ -76,7 +76,18 @@ extern rtems_id   Task_id[ 4 ];         /* array of task ids */
 extern rtems_name Task_name[ 4 ];       /* array of task names */
 
 volatile enum monitored_components monitoredc[N_COMPS];
-volatile enum monitored_components no_communication[N_COMPS];
+volatile enum monitored_components irrisponsive[N_COMPS];
+
+typedef struct{
+	int Xpos;
+	int Ypos;
+	int Zpos;
+	int Xval;
+	int Yval;
+	int Zval;
+	int GPSTime;
+	int ready;
+} GPS_struct;
 
 #endif /* SHMS_H_ */
 

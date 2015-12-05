@@ -7,16 +7,16 @@ rtems_task Task_Process( rtems_task_argument unused )
 
 	while(1)
 	{
-		if(pqh == NULL)	// if nothing to process, wait 5 seconds.
+		if(pqh == NULL)	// if nothing to process, wait for 5 seconds.
 			sleep(5);
 		pr = deq();
 		switch( pr->cid )
 		{
 			case GPS1:
-				process_gps(pr);
+				process_gps((GPS_struct*)pr->data,1);
 				break;
 			case GPS2:
-				process_gps(pr);
+				process_gps((GPS_struct*)pr->data,2);
 				break;
 			case SUN_S:
 				preocess_sun_s(pr);
@@ -34,6 +34,19 @@ rtems_task Task_Process( rtems_task_argument unused )
 				process_ocm(pr);
 				break;
 		}
+	}
+}
+
+
+void process_gps(GPS_struct* GPS_data,int gpsnum)
+{
+	if(irrisponsive[GPS1])	// gps1 is not responding (communication or data retrieval error)
+	{
+
+	}
+	else if (GPS_data == NULL)	// some other malfunctioning test related to the gps data
+	{
+
 	}
 }
 

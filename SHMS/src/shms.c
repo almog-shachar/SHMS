@@ -18,6 +18,7 @@ rtems_task Init( rtems_task_argument ignored)
 {
 
 	  rtems_time_of_day time;
+	  int i;
 	  time.year   = 2015;
 	  time.month  = 8;
 	  time.day    = 18;
@@ -28,6 +29,12 @@ rtems_task Init( rtems_task_argument ignored)
 	  status = rtems_clock_set( &time );
 
 	  createq(); // initialize the processing queue
+	  for(i=0; i < N_COMPS; i++)
+	  {
+		  irrisponsive[i] = 0;
+		  monitoredc[i] = 1;
+	  }
+
 
 	  Task_name[ 1 ] = rtems_build_name( 'C', 'L', 'C', 'T' ); // collect
 	  Task_name[ 2 ] = rtems_build_name( 'P', 'R', 'C', 'S' ); // process

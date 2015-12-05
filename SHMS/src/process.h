@@ -27,7 +27,7 @@ pnode *pqt;			// process queue tail
 int nq;				// queue size
 
 rtems_task Task_Process( rtems_task_argument);
-void process_gps(pnode*);
+void process_gps(GPS_struct*,int);
 void process_sun_s(pnode*);
 void process_rw(pnode*);
 void process_uhf(pnode*);
