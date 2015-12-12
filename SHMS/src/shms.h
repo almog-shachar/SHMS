@@ -88,7 +88,6 @@ typedef struct{
 	int ready;
 } GPS_struct;
 
-int CBR_val = 0;
 
 #endif /* SHMS_H_ */
 

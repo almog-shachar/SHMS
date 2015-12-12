@@ -8,6 +8,9 @@
 #ifndef PROCESS_H_
 #define PROCESS_H_
 
+#include "shms.h"
+
+
 /* a node in the process queue*/
 typedef struct {
 	int cid;

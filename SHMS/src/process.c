@@ -1,5 +1,5 @@
-#include "shms.h"
 #include "process.h"
+
 
 rtems_task Task_Process( rtems_task_argument unused )
 {
@@ -43,15 +43,11 @@ void process_gps(GPS_struct* GPS_data,int gpsnum)
 	if (GPS_data == NULL)	// GPS_data is set to null means that no data could be extracted from GPS component.
 	{
 		if(gpsnum == GPS1)
-		{
 			CBR_val = CBR_val | 1; //set the proper gps cbr bit on.
-			CBR_case_resolver(GPS1);	//find the matching case.
-		}
 		else if(gpsnum == GPS2)
-		{
 			CBR_val = CBR_val | 2; //set the proper gps cbr bit on.
-			CBR_case_resolver(GPS1);
-		}
+
+		CBR_case_resolver();	//find the matching case.
 
 	}
 }
