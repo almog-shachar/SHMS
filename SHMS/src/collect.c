@@ -206,15 +206,17 @@ rtems_task Task_Collect_GPS ()
 	{
 		if( (*GPS_data = (GPS_struct)malloc(sizeof(GPS_struct))) != NULL)	// allocate memory for gps data node
 		{
-			request_info(UART_C, GPS_data->Xpos, Xpos_request);	// retrieve gps data
-			request_info(UART_C, GPS_data->Ypos, Ypos_request);
-			request_info(UART_C, GPS_data->Zpos, Zpos_request);
-			request_info(UART_C, GPS_data->Xval, Xval_request);
-			request_info(UART_C, GPS_data->Yval, Yval_request);
-			request_info(UART_C, GPS_data->Zval, Zval_request);
-			request_info(UART_C, GPS_data->GPSTime, GPSTime_request);
+			if( 	(request_info(UART_C, GPS_data->Xpos, Xpos_request) == FAILURE) ||
+					(request_info(UART_C, GPS_data->Ypos, Ypos_request) == FAILURE) ||
+					(request_info(UART_C, GPS_data->Zpos, Zpos_request) == FAILURE) ||
+					(request_info(UART_C, GPS_data->Xval, Xval_request) == FAILURE) ||
+					(request_info(UART_C, GPS_data->Yval, Yval_request) == FAILURE) ||
+					(request_info(UART_C, GPS_data->Zval, Zval_request) == FAILURE) ||
+					(request_info(UART_C, GPS_data->GPSTime, GPSTime_request) == FAILURE) 	)			// retrieve gps data
+					GPS_data = NULL;
+			else
+				enq((void*)GPS_data); // enqueue for processing
 		}
-		enq((void*)GPS_data); // enqueue for processing
 		sleep(180); // next collection phase in 3 minutes.
 	}
 }
@@ -405,6 +407,7 @@ int set_uart_attribs(int fd, int speed, int parity)
 
 	}
 
+
 	enum res request_info(int dev, int *data, unsigned int request)
 	{
 		int n;
@@ -426,6 +429,50 @@ int set_uart_attribs(int fd, int speed, int parity)
 		return SUCCESS;
 	}
 
+	enum res request_info_mock(int dev, int *data, unsigned int request)
+	{
+		time_t t;
+
+		/* Intializes random number generator */
+		srand((unsigned) time(&t));
+
+		switch(request)
+		{
+			case Xpos_request:
+				*data = request = rand % 100;
+				return SUCCESS;
+				break;
+			case Ypos_request:
+				*data = rand % 100;
+				return SUCCESS;
+				break;
+			case Zpos_request:
+				*data = rand % 100;
+				return SUCCESS;
+				break;
+			case Xval_request:
+				*data = rand % 100;
+				return SUCCESS;
+				break;
+			case Yval_request:
+				*data = rand % 100;
+				return SUCCESS;
+				break;
+			case Zval_request:
+				*data = rand % 100;
+				return SUCCESS;
+				break;
+			case GPSTime_request:
+				*data = rand % 1000;
+				return SUCCESS;
+				break;
+
+		}
+
+		*data = -1;
+		return FAILURE;
+
+	}
 
 /*CODE DUMP*/
 /*

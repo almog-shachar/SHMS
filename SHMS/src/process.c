@@ -40,11 +40,7 @@ rtems_task Task_Process( rtems_task_argument unused )
 
 void process_gps(GPS_struct* GPS_data,int gpsnum)
 {
-	if(irrisponsive[GPS1])	// gps1 is not responding (communication or data retrieval error)
-	{
-
-	}
-	else if (GPS_data == NULL)	// some other malfunctioning test related to the gps data
+	if (GPS_data == NULL)	// some other malfunctioning test related to the gps data
 	{
 
 	}
