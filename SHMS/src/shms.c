@@ -13,7 +13,6 @@ rtems_status_code status;
 rtems_id   Task_id[ 4 ];         /* array of task ids */
 rtems_name Task_name[ 4 ];       /* array of task names */
 
-
 rtems_task Init( rtems_task_argument ignored)
 {
 

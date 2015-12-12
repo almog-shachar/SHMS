@@ -69,7 +69,6 @@ rtems_task Init( rtems_task_argument argument);
      rtems_configuration_get_rtems_api_configuration()->number_of_initialization_tasks )
 
 
-
 enum monitored_components {GPS1,GPS2,SUN_S,RW,STX,UHF,OCM};
 enum res {SUCCESS,FAILURE};
 extern rtems_id   Task_id[ 4 ];         /* array of task ids */
@@ -88,6 +87,8 @@ typedef struct{
 	int GPSTime;
 	int ready;
 } GPS_struct;
+
+int CBR_val = 0;
 
 #endif /* SHMS_H_ */
 

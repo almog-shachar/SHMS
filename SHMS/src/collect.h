@@ -59,7 +59,8 @@ void rawMode(int dev);
 void ReverseInt(int *val);
 int set_uart_attribs(int fd, int speed, int parity);
 void set_uart_settings(int fd);
-void request_info(int dev, int * GPS_info, unsigned int request);
+enum res request_info(int dev, int * GPS_info, unsigned int request);
+enum res request_info_mock(int dev, int * GPS_info, unsigned int request);
 rtems_task Task_Collect(rtems_task_argument);
 
 
