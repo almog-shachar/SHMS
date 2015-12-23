@@ -1,14 +1,14 @@
 /*
  * collect.c
  *
- *  Created on: 28 απεα 2015
+ *  Created on: 28 Π±Ρ€ΠµΠ± 2015
  *      Author: Titan
  */
 
 
 #include "shms.h"
 #include "collect.h"
-
+/*-------------------------------*/
 GPS_request = 2301;
 Xpos_request = 2302;
 Ypos_request = 2303;
@@ -17,13 +17,71 @@ Xval_request = 2305;
 Yval_request = 2306;
 Zval_request = 2307;
 GPSTime_request = 2308;
-AX100_request = 2401;
+gps_off = 2309;
+/*-------------------------------*/
+
+/*-------------------------------*/
+UHF_request = 2401;
+V33_current_request = 2402;
+V33_voltage_request = 2403;
+V5_current_request = 2404;
+V5_voltage_request = 2405;
+SMPS_temp_request = 2406;
+PA_temp_request = 2407;
+RSSI_request = 2407;
+/*-------------------------------*/
+
+/*-------------------------------*/
 Sun_Sensor_request = 2501;
+fit_quality_request = 2502;
+geometry_quality_request = 2503;
+/*-------------------------------*/
+
+/*-------------------------------*/
 OCM_request = 2601;
+sma_request = 2602;
+ecc_request = 2603;
+inc_request = 2604;
+arg_request = 2605;
+raan_request = 2606;
+tra_request = 2607;
+sma_mean_request = 2608;
+ecc_mean_request = 2609;
+inc_mean_request = 2610;
+arg_mean_request = 26011;
+raan_mean_request = 2612;
+true_mean_an_request = 2613;
+R_alpha_beta_vector_request = 2614;
+R_beta_gamma_vector_request = 2615;
+R_gamma_alpha_vector_request = 2616;
+V_alpha_beta_vector_request = 2617;
+V_beta_gamma_vector_request = 2618;
+V_gamma_alpha_vector_request = 2619;
+/*-------------------------------*/
+
+/*-------------------------------*/
 STX_request = 2701;
+B_Current_W_eigth_RF_request = 2702;
+B_Current_W_quarter_RF_request = 2703;
+B_Current_W_half_RF_request = 2704;
+B_Current_W_1_RF_request = 2705;
+B_voltage_request = 2706;
+PA_current_request = 2707;
+PA_voltage_request = 2708;
+PA_temp_request = 2709;
+RF_out_power_request = 2710;
+top_b_temp_request = 2711;
+bot_b_temp_request = 2712;
+/*-------------------------------*/
+
+/*-------------------------------*/
 RW_request = 2801;
+D_chip_temp_request = 2802;
+D_chip_current_request = 2803;
+D_chip_voltage_request = 2804;
+/*-------------------------------*/
+
 safe_mode = 4401;
-gps_off = 4301;
 
 
 typedef struct{
@@ -223,52 +281,203 @@ rtems_task Task_Collect_GPS ()
 
 rtems_task Task_Init_SUN_S()
 {
+	uart_devices[UART_C].port = "/dev/console_c";
+	uart_devices[UART_C].fd = open (uart_devices[UART_C].port, O_RDWR);
 
+	if (uart_devices[UART_C].fd < 0)
+	{
+		printf("Error on open");
+		strerror(errno);
+		irrisponsive[SUN_S] = 1;
+
+	}
+
+	uart_devices[UART_C].speed = B38400;
+	uart_devices[UART_C].parity = 0;
+	set_uart_attribs(uart_devices[UART_C].fd, uart_devices[UART_C].speed, uart_devices[UART_C].parity);
+	set_uart_settings(uart_devices[UART_C].fd);
 }
 
 rtems_task Task_Collect_SUN_S ()
 {
-
+	SUN_S_struct* SUN_S_data;
+	while( monitoredc[SUN_S] )
+	{
+		if( (*SUN_S_data = (SUN_S_struct)malloc(sizeof(SUN_S_struct))) != NULL)	// allocate memory for SUN_S data node
+		{
+			request_info(UART_C, SUN_S_data->fit_quality, fit_quality_request);	// retrieve fit data
+			request_info(UART_C, SUN_S_data->geometry_quality, geometry_quality_request);	// retrieve geometry data
+		}
+		enq((void*)SUN_S_data); // enqueue for processing
+		sleep(180); // next collection phase in 3 minutes.
+	}
 }
 
 rtems_task Task_Init_RW()
 {
+	uart_devices[UART_C].port = "/dev/console_c";
+	uart_devices[UART_C].fd = open (uart_devices[UART_C].port, O_RDWR);
 
+	if (uart_devices[UART_C].fd < 0)
+	{
+		printf("Error on open");
+		strerror(errno);
+		irrisponsive[RW] = 1;
+
+	}
+
+	uart_devices[UART_C].speed = B38400;
+	uart_devices[UART_C].parity = 0;
+	set_uart_attribs(uart_devices[UART_C].fd, uart_devices[UART_C].speed, uart_devices[UART_C].parity);
+	set_uart_settings(uart_devices[UART_C].fd);
 }
 
 rtems_task Task_Collect_RW ()
 {
-
+	RW_struct* RW_data;
+	while( monitoredc[RW] )
+	{
+		if( (*RW_data = (RW_struct)malloc(sizeof(RW_struct))) != NULL)	// allocate memory for RW data node
+		{
+			request_info(UART_C, RW_data->D_chip_temp, D_chip_temp_request);	// retrieve RW data
+			request_info(UART_C, RW_data->D_chip_current, D_chip_current_request);
+			request_info(UART_C, RW_data->D_chip_voltage, D_chip_voltage_request);
+		}
+		enq((void*)RW_data); // enqueue for processing
+		sleep(180); // next collection phase in 3 minutes.
+	}
 }
 
 rtems_task Task_Init_STX()
 {
+	uart_devices[UART_C].port = "/dev/console_c";
+	uart_devices[UART_C].fd = open (uart_devices[UART_C].port, O_RDWR);
 
+	if (uart_devices[UART_C].fd < 0)
+	{
+		printf("Error on open");
+		strerror(errno);
+		irrisponsive[STX] = 1;
+
+	}
+
+	uart_devices[UART_C].speed = B38400;
+	uart_devices[UART_C].parity = 0;
+	set_uart_attribs(uart_devices[UART_C].fd, uart_devices[UART_C].speed, uart_devices[UART_C].parity);
+	set_uart_settings(uart_devices[UART_C].fd);
 }
 
 rtems_task Task_Collect_STX ()
 {
-
+	STX_struct* STX_data;
+	while( monitoredc[STX] )
+	{
+		if( (*STX_data = (STX_struct)malloc(sizeof(STX_struct))) != NULL)	// allocate memory for STX data node
+		{
+			request_info(UART_C, STX_data->B_Current_W_eigth_RF, B_Current_W_eigth_RF_request);	// retrieve STX data
+			request_info(UART_C, STX_data->B_Current_W_quarter_RF, B_Current_W_quarter_RF_request);	// retrieve STX data
+			request_info(UART_C, STX_data->B_Current_W_half_RF, B_Current_W_half_RF_request);	// retrieve STX data
+			request_info(UART_C, STX_data->B_Current_W_1_RF, B_Current_W_1_RF_request);	// retrieve STX data
+			request_info(UART_C, STX_data->B_voltage, B_voltage_request);	// retrieve STX data
+			request_info(UART_C, STX_data->PA_current, PA_current_request);	// retrieve STX data
+			request_info(UART_C, STX_data->PA_voltage, PA_voltage_request);	// retrieve STX data
+			request_info(UART_C, STX_data->PA_temp, PA_temp_request);	// retrieve STX data
+			request_info(UART_C, STX_data->RF_out_power, RF_out_power_request);	// retrieve STX data
+			request_info(UART_C, STX_data->top_b_temp, top_b_temp_request);	// retrieve STX data
+			request_info(UART_C, STX_data->bot_b_temp, bot_b_temp_request);	// retrieve STX data
+		}
+		enq((void*)STX_data); // enqueue for processing
+		sleep(180); // next collection phase in 3 minutes.
+	}
 }
 
 rtems_task Task_Init_OCM()
 {
+	uart_devices[UART_C].port = "/dev/console_c";
+	uart_devices[UART_C].fd = open (uart_devices[UART_C].port, O_RDWR);
 
+	if (uart_devices[UART_C].fd < 0)
+	{
+		printf("Error on open");
+		strerror(errno);
+		irrisponsive[OCM] = 1;
+
+	}
+
+	uart_devices[UART_C].speed = B38400;
+	uart_devices[UART_C].parity = 0;
+	set_uart_attribs(uart_devices[UART_C].fd, uart_devices[UART_C].speed, uart_devices[UART_C].parity);
+	set_uart_settings(uart_devices[UART_C].fd);
 }
 
 rtems_task Task_Collect_OCM ()
 {
-
+	OCM_struct* OCM_data;
+	while( monitoredc[OCM] )
+	{
+		if( (*OCM_data = (OCM_struct)malloc(sizeof(OCM_struct))) != NULL)	// allocate memory for OCM data node
+		{
+			request_info(UART_C, OCM_data->sma, sma_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->ecc, ecc_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->inc, inc_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->arg, arg_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->raan, raan_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->tra, tra_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->sma_mean, sma_mean_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->ecc_mean, ecc_mean_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->inc_mean, inc_mean_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->arg_mean, arg_mean_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->raan_mean, raan_mean_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->true_mean_an, true_mean_an_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->R_alpha_beta_vector, R_alpha_beta_vector_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->R_beta_gamma_vector, R_beta_gamma_vector_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->R_gamma_alpha_vector, R_gamma_alpha_vector_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->V_alpha_beta_vector, V_alpha_beta_vector_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->V_beta_gamma_vector, V_beta_gamma_vector_request);	// retrieve OCM data
+			request_info(UART_C, OCM_data->V_gamma_alpha_vector, V_gamma_alpha_vector_request);	// retrieve OCM data
+		}
+		enq((void*)OCM_data); // enqueue for processing
+		sleep(180); // next collection phase in 3 minutes.
+	}
 }
 
 rtems_task Task_Init_UHF()
 {
+	uart_devices[UART_C].port = "/dev/console_c";
+	uart_devices[UART_C].fd = open (uart_devices[UART_C].port, O_RDWR);
 
+	if (uart_devices[UART_C].fd < 0)
+	{
+		printf("Error on open");
+		strerror(errno);
+		irrisponsive[UHF] = 1;
+
+	}
+
+	uart_devices[UART_C].speed = B38400;
+	uart_devices[UART_C].parity = 0;
+	set_uart_attribs(uart_devices[UART_C].fd, uart_devices[UART_C].speed, uart_devices[UART_C].parity);
+	set_uart_settings(uart_devices[UART_C].fd);
 }
 
 rtems_task Task_Collect_UHF ()
 {
-
+	UHF_struct* UHF_data;
+	while( monitoredc[UHF] )
+	{
+		if( (*UHF_data = (UHF_struct)malloc(sizeof(UHF_struct))) != NULL)	// allocate memory for gps data node
+		{
+			request_info(UART_C, UHF_data->V33_current, V33_current_request);	// retrieve gps data
+			request_info(UART_C, UHF_data->V33_voltage, V33_voltage_request);
+			request_info(UART_C, UHF_data->V5_current, V5_current_request);
+			request_info(UART_C, UHF_data->V5_voltage, V5_voltage_request);
+			request_info(UART_C, UHF_data->SMPS_temp, SMPS_temp_request);
+			request_info(UART_C, UHF_data->PA_temp, PA_temp_request);
+			request_info(UART_C, UHF_data->RSSI, RSSI_request);
+		}
+		enq((void*)UHF_data); // enqueue for processing
+		sleep(180); // next collection phase in 3 minutes.
+	}
 }
 
 
@@ -418,7 +627,6 @@ int set_uart_attribs(int fd, int speed, int parity)
 			printf("Error while writing \n");
 			exit(EXIT_FAILURE);
 		}
-
 		n = read (uart_devices[dev].fd, data, sizeof(int));
 		if(n == -1)
 		{
