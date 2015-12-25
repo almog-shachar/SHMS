@@ -401,26 +401,26 @@ rtems_task Task_Collect_OCM ()
 	OCM_struct* OCM_data;
 	while( monitoredc[OCM] )
 	{
-		if( (*OCM_data = (OCM_struct)malloc(sizeof(OCM_struct))) != NULL)	// allocate memory for OCM data node
+		if( (OCM_data = (OCM_struct*) malloc (sizeof(OCM_struct))) != NULL)	// allocate memory for OCM data node
 		{
-			request_info(UART_C, OCM_data->sma, sma_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->ecc, ecc_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->inc, inc_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->arg, arg_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->raan, raan_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->tra, tra_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->sma_mean, sma_mean_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->ecc_mean, ecc_mean_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->inc_mean, inc_mean_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->arg_mean, arg_mean_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->raan_mean, raan_mean_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->true_mean_an, true_mean_an_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->R_alpha_beta_vector, R_alpha_beta_vector_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->R_beta_gamma_vector, R_beta_gamma_vector_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->R_gamma_alpha_vector, R_gamma_alpha_vector_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->V_alpha_beta_vector, V_alpha_beta_vector_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->V_beta_gamma_vector, V_beta_gamma_vector_request);	// retrieve OCM data
-			request_info(UART_C, OCM_data->V_gamma_alpha_vector, V_gamma_alpha_vector_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->sma), sma_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->ecc), ecc_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->inc), inc_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->arg), arg_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->raan), raan_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->tra), tra_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->sma_mean), sma_mean_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->ecc_mean), ecc_mean_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->inc_mean), inc_mean_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->arg_mean), arg_mean_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->raan_mean), raan_mean_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->true_mean_an), true_mean_an_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->R_alpha_beta_vector), R_alpha_beta_vector_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->R_beta_gamma_vector), R_beta_gamma_vector_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->R_gamma_alpha_vector), R_gamma_alpha_vector_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->V_alpha_beta_vector), V_alpha_beta_vector_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->V_beta_gamma_vector), V_beta_gamma_vector_request);	// retrieve OCM data
+			request_info(UART_C, &(OCM_data->V_gamma_alpha_vector), V_gamma_alpha_vector_request);	// retrieve OCM data
 		}
 		enq((void*)OCM_data); // enqueue for processing
 		sleep(180); // next collection phase in 3 minutes.
@@ -453,13 +453,13 @@ rtems_task Task_Collect_UHF ()
 	{
 		if( (*UHF_data = (UHF_struct)malloc(sizeof(UHF_struct))) != NULL)	// allocate memory for gps data node
 		{
-			request_info(UART_C, UHF_data->V33_current, V33_current_request);	// retrieve gps data
-			request_info(UART_C, UHF_data->V33_voltage, V33_voltage_request);
-			request_info(UART_C, UHF_data->V5_current, V5_current_request);
-			request_info(UART_C, UHF_data->V5_voltage, V5_voltage_request);
-			request_info(UART_C, UHF_data->SMPS_temp, SMPS_temp_request);
-			request_info(UART_C, UHF_data->PA_temp, PA_temp_request);
-			request_info(UART_C, UHF_data->RSSI, RSSI_request);
+			request_info(UART_C, &(UHF_data->V33_current), V33_current_request);	// retrieve gps data
+			request_info(UART_C, &(UHF_data->V33_voltage), V33_voltage_request);
+			request_info(UART_C, &(UHF_data->V5_current), V5_current_request);
+			request_info(UART_C, &(UHF_data->V5_voltage), V5_voltage_request);
+			request_info(UART_C, &(UHF_data->SMPS_temp), SMPS_temp_request);
+			request_info(UART_C, &(UHF_data->PA_temp), PA_temp_request);
+			request_info(UART_C, &(UHF_data->RSSI), RSSI_request);
 		}
 		enq((void*)UHF_data); // enqueue for processing
 		sleep(180); // next collection phase in 3 minutes.
