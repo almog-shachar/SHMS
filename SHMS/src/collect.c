@@ -266,7 +266,7 @@ rtems_task Task_Collect_GPS ()
 	GPS_struct* GPS_data;
 	while( monitoredc[GPS1] )
 	{
-		if( (*GPS_data = (GPS_struct)malloc(sizeof(GPS_struct))) != NULL)	// allocate memory for gps data node
+		if( (GPS_data = (GPS_struct*) malloc (sizeof(GPS_struct))) != NULL)	// allocate memory for gps data node
 		{
 			if( 	(request_info(UART_C, &(GPS_data->Xpos), Xpos_request) == FAILURE) ||
 					(request_info(UART_C, &(GPS_data->Ypos), Ypos_request) == FAILURE) ||
@@ -307,7 +307,7 @@ rtems_task Task_Collect_SUN_S ()
 	SUN_S_struct* SUN_S_data;
 	while( monitoredc[SUN_S] )
 	{
-		if( (*SUN_S_data = (SUN_S_struct)malloc(sizeof(SUN_S_struct))) != NULL)	// allocate memory for SUN_S data node
+		if( (SUN_S_data = (SUN_S_struct*)malloc(sizeof(SUN_S_struct))) != NULL)	// allocate memory for SUN_S data node
 		{
 			request_info(UART_C, &(SUN_S_data->fit_quality), fit_quality_request);	// retrieve fit data
 			request_info(UART_C, &(SUN_S_data->geometry_quality), geometry_quality_request);	// retrieve geometry data
@@ -341,7 +341,7 @@ rtems_task Task_Collect_RW ()
 	RW_struct* RW_data;
 	while( monitoredc[RW] )
 	{
-		if( (*RW_data = (RW_struct)malloc(sizeof(RW_struct))) != NULL)	// allocate memory for RW data node
+		if( (RW_data = (RW_struct*)malloc(sizeof(RW_struct))) != NULL)	// allocate memory for RW data node
 		{
 			request_info(UART_C, &(RW_data->D_chip_temp), D_chip_temp_request);	// retrieve RW data
 			request_info(UART_C, &(RW_data->D_chip_current), D_chip_current_request);
@@ -376,7 +376,7 @@ rtems_task Task_Collect_STX ()
 	STX_struct* STX_data;
 	while( monitoredc[STX] )
 	{
-		if( (*STX_data = (STX_struct)malloc(sizeof(STX_struct))) != NULL)	// allocate memory for STX data node
+		if( (STX_data = (STX_struct*) malloc (sizeof(STX_struct))) != NULL)	// allocate memory for STX data node
 		{
 			request_info(UART_C, &(STX_data->B_Current_W_eigth_RF), B_Current_W_eigth_RF_request);	// retrieve STX data
 			request_info(UART_C, &(STX_data->B_Current_W_quarter_RF), B_Current_W_quarter_RF_request);	// retrieve STX data
@@ -452,7 +452,7 @@ rtems_task Task_Collect_UHF ()
 	UHF_struct* UHF_data;
 	while( monitoredc[UHF] )
 	{
-		if( (*UHF_data = (UHF_struct)malloc(sizeof(UHF_struct))) != NULL)	// allocate memory for gps data node
+		if( (UHF_data = (UHF_struct*)malloc(sizeof(UHF_struct))) != NULL)	// allocate memory for gps data node
 		{
 			request_info(UART_C, &(UHF_data->V33_current), V33_current_request);	// retrieve gps data
 			request_info(UART_C, &(UHF_data->V33_voltage), V33_voltage_request);
