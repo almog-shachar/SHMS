@@ -1,7 +1,7 @@
 /*
  * shms.h
  *
- *  Created on: 15 áðåá 2015
+ *  Created on: 15 Ã¡Ã°Ã¥Ã¡ 2015
  *      Author: Titan
  */
 
@@ -88,6 +88,63 @@ typedef struct{
 	int GPSTime;
 	int ready;
 } GPS_struct;
+
+typedef struct{
+	int V33_current;
+	int V33_voltage;
+	int V5_current;
+	int V5_voltage;
+	int SMPS_temp;
+	int PA_temp;
+	int RSSI;
+}UHF_struct;
+
+typedef struct{
+  	int sma;
+  	int ecc;
+  	int inc;
+  	int arg;
+  	int raan;
+  	int tra;
+  	int sma_mean;
+  	int ecc_mean;
+  	int inc_mean;
+  	int arg_mean;
+  	int raan_mean;
+  	int true_mean_an;
+  	int R_alpha_beta_vector;
+  	int R_beta_gamma_vector;
+  	int R_gamma_alpha_vector;
+  	int V_alpha_beta_vector;
+  	int V_beta_gamma_vector;
+  	int V_gamma_alpha_vector;
+}OCM_struct;
+
+typedef struct{
+	int B_Current_W_eigth_RF;
+	int B_Current_W_quarter_RF;
+	int B_Current_W_half_RF;
+	int B_Current_W_1_RF;
+	int B_voltage;
+	int PA_current;
+	int PA_voltage;
+	int PA_temp;
+	int RF_out_power;
+	int top_b_temp;
+	int bot_b_temp;
+
+}STX_struct;
+
+typedef struct{
+	int fit_quality;
+	int geometry_quality;
+}SUN_S_struct;
+
+typedef struct{
+	int D_chip_temp;
+	int D_chip_current;
+	int D_chip_voltage;
+}RW_struct;
 
 typedef struct{
 	int V33_current;
