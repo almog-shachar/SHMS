@@ -122,6 +122,21 @@ void set_uart_settings(int fd);
 enum res request_info(int dev, int * GPS_info, unsigned int request);
 enum res request_info_mock(int dev, int * GPS_info, unsigned int request);
 rtems_task Task_Collect(rtems_task_argument);
+rtems_task Task_Collect_GPS ();
+rtems_task Task_Init_GPS();
+rtems_task Task_Init_SUN_S();
+rtems_task Task_Collect_SUN_S();
+rtems_task Task_Init_RW();
+rtems_task Task_Collect_RW();
+rtems_task Task_Init_STX();
+rtems_task Task_Collect_STX();
+rtems_task Task_Init_OCM();
+rtems_task Task_Collect_OCM();
+rtems_task Task_Init_UHF();
+rtems_task Task_Collect_UHF();
+
+
+
 
 
 

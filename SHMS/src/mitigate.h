@@ -13,7 +13,7 @@ rtems_task Task_Mitigate( rtems_task_argument unused );
 enum res reset_gps(int);
 enum res reset_rw();
 enum res reset_ocm();
-enum res reaet_stx();
+enum res reset_stx();
 enum res reset_uhf();
 enum res reset_sun_s();
 
