@@ -391,24 +391,7 @@ rtems_task Task_Collect_STX ()
 	}
 }
 
-rtems_task Task_Init_OCM()
-{
-	uart_devices[UART_C].port = "/dev/console_c";
-	uart_devices[UART_C].fd = open (uart_devices[UART_C].port, O_RDWR);
 
-	if (uart_devices[UART_C].fd < 0)
-	{
-		printf("Error on open");
-		strerror(errno);
-		irrisponsive[OCM] = 1;
-
-	}
-
-	uart_devices[UART_C].speed = B38400;
-	uart_devices[UART_C].parity = 0;
-	set_uart_attribs(uart_devices[UART_C].fd, uart_devices[UART_C].speed, uart_devices[UART_C].parity);
-	set_uart_settings(uart_devices[UART_C].fd);
-}
 
 rtems_task Task_Collect_OCM ()
 {

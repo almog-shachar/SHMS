@@ -113,11 +113,17 @@ unsigned int safe_mode;
 #define UART_A 0
 #define UART_B 1
 #define UART_C 2
-
-
-
-
-
+rtems_task Task_Init_GPS();
+rtems_task Task_Collect_GPS ();
+rtems_task Task_Init_SUN_S();
+rtems_task Task_Collect_SUN_S();
+rtems_task Task_Init_RW();
+rtems_task Task_Collect_RW ();
+rtems_task Task_Init_STX();
+rtems_task Task_Collect_STX ();
+rtems_task Task_Collect_OCM();
+rtems_task Task_Init_UHF();
+rtems_task Task_Collect_UHF();
 
 
 
