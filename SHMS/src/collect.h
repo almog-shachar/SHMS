@@ -125,6 +125,8 @@ rtems_task Task_Collect_OCM();
 rtems_task Task_Init_UHF();
 rtems_task Task_Collect_UHF();
 
+enum res request_info(int, int* , unsigned int);
+
 
 
 #endif /* COLLECT_H_ */
