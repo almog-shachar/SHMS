@@ -127,6 +127,10 @@ rtems_task Task_Collect_UHF();
 
 enum res request_info(int, int* , unsigned int);
 
+int set_uart_attribs(int, int, int);
+
+void set_uart_settings(int );
+
 
 
 #endif /* COLLECT_H_ */
