@@ -8,6 +8,7 @@
 
 #include "shms.h"
 #include "collect.h"
+#include "process.h"
 
 void init_vars()
 {
@@ -267,13 +268,13 @@ rtems_task Task_Collect_GPS ()
 	{
 		if( (*GPS_data = (GPS_struct)malloc(sizeof(GPS_struct))) != NULL)	// allocate memory for gps data node
 		{
-			if( 	(request_info(UART_C, GPS_data->Xpos, Xpos_request) == FAILURE) ||
-					(request_info(UART_C, GPS_data->Ypos, Ypos_request) == FAILURE) ||
-					(request_info(UART_C, GPS_data->Zpos, Zpos_request) == FAILURE) ||
-					(request_info(UART_C, GPS_data->Xval, Xval_request) == FAILURE) ||
-					(request_info(UART_C, GPS_data->Yval, Yval_request) == FAILURE) ||
-					(request_info(UART_C, GPS_data->Zval, Zval_request) == FAILURE) ||
-					(request_info(UART_C, GPS_data->GPSTime, GPSTime_request) == FAILURE) 	)			// retrieve gps data
+			if( 	(request_info(UART_C, &(GPS_data->Xpos), Xpos_request) == FAILURE) ||
+					(request_info(UART_C, &(GPS_data->Ypos), Ypos_request) == FAILURE) ||
+					(request_info(UART_C, &(GPS_data->Zpos), Zpos_request) == FAILURE) ||
+					(request_info(UART_C, &(GPS_data->Xval), Xval_request) == FAILURE) ||
+					(request_info(UART_C, &(GPS_data->Yval), Yval_request) == FAILURE) ||
+					(request_info(UART_C, &(GPS_data->Zval), Zval_request) == FAILURE) ||
+					(request_info(UART_C, &(GPS_data->GPSTime), GPSTime_request) == FAILURE) 	)			// retrieve gps data
 					GPS_data = NULL;
 			else
 				enq((void*)GPS_data); // enqueue for processing
@@ -308,8 +309,8 @@ rtems_task Task_Collect_SUN_S ()
 	{
 		if( (*SUN_S_data = (SUN_S_struct)malloc(sizeof(SUN_S_struct))) != NULL)	// allocate memory for SUN_S data node
 		{
-			request_info(UART_C, SUN_S_data->fit_quality, fit_quality_request);	// retrieve fit data
-			request_info(UART_C, SUN_S_data->geometry_quality, geometry_quality_request);	// retrieve geometry data
+			request_info(UART_C, &(SUN_S_data->fit_quality), fit_quality_request);	// retrieve fit data
+			request_info(UART_C, &(SUN_S_data->geometry_quality), geometry_quality_request);	// retrieve geometry data
 		}
 		enq((void*)SUN_S_data); // enqueue for processing
 		sleep(180); // next collection phase in 3 minutes.
@@ -342,9 +343,9 @@ rtems_task Task_Collect_RW ()
 	{
 		if( (*RW_data = (RW_struct)malloc(sizeof(RW_struct))) != NULL)	// allocate memory for RW data node
 		{
-			request_info(UART_C, RW_data->D_chip_temp, D_chip_temp_request);	// retrieve RW data
-			request_info(UART_C, RW_data->D_chip_current, D_chip_current_request);
-			request_info(UART_C, RW_data->D_chip_voltage, D_chip_voltage_request);
+			request_info(UART_C, &(RW_data->D_chip_temp), D_chip_temp_request);	// retrieve RW data
+			request_info(UART_C, &(RW_data->D_chip_current), D_chip_current_request);
+			request_info(UART_C, &(RW_data->D_chip_voltage), D_chip_voltage_request);
 		}
 		enq((void*)RW_data); // enqueue for processing
 		sleep(180); // next collection phase in 3 minutes.
@@ -377,17 +378,17 @@ rtems_task Task_Collect_STX ()
 	{
 		if( (*STX_data = (STX_struct)malloc(sizeof(STX_struct))) != NULL)	// allocate memory for STX data node
 		{
-			request_info(UART_C, STX_data->B_Current_W_eigth_RF, B_Current_W_eigth_RF_request);	// retrieve STX data
-			request_info(UART_C, STX_data->B_Current_W_quarter_RF, B_Current_W_quarter_RF_request);	// retrieve STX data
-			request_info(UART_C, STX_data->B_Current_W_half_RF, B_Current_W_half_RF_request);	// retrieve STX data
-			request_info(UART_C, STX_data->B_Current_W_1_RF, B_Current_W_1_RF_request);	// retrieve STX data
-			request_info(UART_C, STX_data->B_voltage, B_voltage_request);	// retrieve STX data
-			request_info(UART_C, STX_data->PA_current, PA_current_request);	// retrieve STX data
-			request_info(UART_C, STX_data->PA_voltage, PA_voltage_request);	// retrieve STX data
-			request_info(UART_C, STX_data->PA_temp, PA_temp_request);	// retrieve STX data
-			request_info(UART_C, STX_data->RF_out_power, RF_out_power_request);	// retrieve STX data
-			request_info(UART_C, STX_data->top_b_temp, top_b_temp_request);	// retrieve STX data
-			request_info(UART_C, STX_data->bot_b_temp, bot_b_temp_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->B_Current_W_eigth_RF), B_Current_W_eigth_RF_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->B_Current_W_quarter_RF), B_Current_W_quarter_RF_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->B_Current_W_half_RF), B_Current_W_half_RF_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->B_Current_W_1_RF), B_Current_W_1_RF_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->B_voltage), B_voltage_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->PA_current), PA_current_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->PA_voltage), PA_voltage_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->PA_temp), PA_temp_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->RF_out_power), RF_out_power_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->top_b_temp), top_b_temp_request);	// retrieve STX data
+			request_info(UART_C, &(STX_data->bot_b_temp), bot_b_temp_request);	// retrieve STX data
 		}
 		enq((void*)STX_data); // enqueue for processing
 		sleep(180); // next collection phase in 3 minutes.

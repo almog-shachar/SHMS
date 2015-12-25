@@ -12,10 +12,10 @@
 
 
 /* a node in the process queue*/
-typedef struct {
+typedef struct pnode {
 	int cid;
 	void* data;
-	pnode* next;
+	struct pnode* next;
 } pnode;
 
 
