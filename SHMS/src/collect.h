@@ -57,7 +57,7 @@ unsigned int Sun_Sensor_request;
 unsigned int UHF_request;
 	unsigned int V33_current_request;
 	unsigned int V33_voltage_request;
-	int V5_current_request;
+	unsigned int V5_current_request;
 	unsigned int V5_voltage_request;
 	unsigned int SMPS_temp_request;
 	unsigned int PA_temp_request;

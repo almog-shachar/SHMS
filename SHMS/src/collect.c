@@ -85,7 +85,7 @@ void init_vars()
 	/*-------------------------------*/
 
 	safe_mode = 4401;
-}
+	}
 
 typedef struct{
 
@@ -630,38 +630,43 @@ int set_uart_attribs(int fd, int speed, int parity)
 		/* Intializes random number generator */
 		srand((unsigned) time(&t));
 
-		switch(request)
-		{
-			case Xpos_request:
-				*data = request = rand % 100;
-				return SUCCESS;
-				break;
-			case Ypos_request:
-				*data = rand % 100;
-				return SUCCESS;
-				break;
-			case Zpos_request:
-				*data = rand % 100;
-				return SUCCESS;
-				break;
-			case Xval_request:
-				*data = rand % 100;
-				return SUCCESS;
-				break;
-			case Yval_request:
-				*data = rand % 100;
-				return SUCCESS;
-				break;
-			case Zval_request:
-				*data = rand % 100;
-				return SUCCESS;
-				break;
-			case GPSTime_request:
-				*data = rand % 1000;
-				return SUCCESS;
-				break;
 
+		if(request == Xpos_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
 		}
+		else if (request == Ypos_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
+		}
+		else if (request == Zpos_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
+		}
+		else if (request == Xval_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
+		}
+		else if (request == Yval_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
+		}
+		else if (request == Zval_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
+		}
+		else if (request == GPSTime_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
+		}
+
 
 		*data = -1;
 		return FAILURE;
