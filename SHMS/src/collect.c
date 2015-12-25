@@ -8,81 +8,84 @@
 
 #include "shms.h"
 #include "collect.h"
-/*-------------------------------*/
-GPS_request = 2301;
-Xpos_request = 2302;
-Ypos_request = 2303;
-Zpos_request = 2304;
-Xval_request = 2305;
-Yval_request = 2306;
-Zval_request = 2307;
-GPSTime_request = 2308;
-gps_off = 2309;
-/*-------------------------------*/
 
-/*-------------------------------*/
-UHF_request = 2401;
-V33_current_request = 2402;
-V33_voltage_request = 2403;
-V5_current_request = 2404;
-V5_voltage_request = 2405;
-SMPS_temp_request = 2406;
-PA_temp_request = 2407;
-RSSI_request = 2407;
-/*-------------------------------*/
+void init_vars()
+{
+	/*-------------------------------*/
+	GPS_request = 2301;
+	Xpos_request = 2302;
+	Ypos_request = 2303;
+	Zpos_request = 2304;
+	Xval_request = 2305;
+	Yval_request = 2306;
+	Zval_request = 2307;
+	GPSTime_request = 2308;
+	gps_off = 2309;
+	/*-------------------------------*/
 
-/*-------------------------------*/
-Sun_Sensor_request = 2501;
-fit_quality_request = 2502;
-geometry_quality_request = 2503;
-/*-------------------------------*/
+	/*-------------------------------*/
+	UHF_request = 2401;
+	V33_current_request = 2402;
+	V33_voltage_request = 2403;
+	V5_current_request = 2404;
+	V5_voltage_request = 2405;
+	SMPS_temp_request = 2406;
+	PA_temp_request = 2407;
+	RSSI_request = 2407;
+	/*-------------------------------*/
 
-/*-------------------------------*/
-OCM_request = 2601;
-sma_request = 2602;
-ecc_request = 2603;
-inc_request = 2604;
-arg_request = 2605;
-raan_request = 2606;
-tra_request = 2607;
-sma_mean_request = 2608;
-ecc_mean_request = 2609;
-inc_mean_request = 2610;
-arg_mean_request = 26011;
-raan_mean_request = 2612;
-true_mean_an_request = 2613;
-R_alpha_beta_vector_request = 2614;
-R_beta_gamma_vector_request = 2615;
-R_gamma_alpha_vector_request = 2616;
-V_alpha_beta_vector_request = 2617;
-V_beta_gamma_vector_request = 2618;
-V_gamma_alpha_vector_request = 2619;
-/*-------------------------------*/
+	/*-------------------------------*/
+	Sun_Sensor_request = 2501;
+	fit_quality_request = 2502;
+	geometry_quality_request = 2503;
+	/*-------------------------------*/
 
-/*-------------------------------*/
-STX_request = 2701;
-B_Current_W_eigth_RF_request = 2702;
-B_Current_W_quarter_RF_request = 2703;
-B_Current_W_half_RF_request = 2704;
-B_Current_W_1_RF_request = 2705;
-B_voltage_request = 2706;
-PA_current_request = 2707;
-PA_voltage_request = 2708;
-PA_temp_request = 2709;
-RF_out_power_request = 2710;
-top_b_temp_request = 2711;
-bot_b_temp_request = 2712;
-/*-------------------------------*/
+	/*-------------------------------*/
+	OCM_request = 2601;
+	sma_request = 2602;
+	ecc_request = 2603;
+	inc_request = 2604;
+	arg_request = 2605;
+	raan_request = 2606;
+	tra_request = 2607;
+	sma_mean_request = 2608;
+	ecc_mean_request = 2609;
+	inc_mean_request = 2610;
+	arg_mean_request = 26011;
+	raan_mean_request = 2612;
+	true_mean_an_request = 2613;
+	R_alpha_beta_vector_request = 2614;
+	R_beta_gamma_vector_request = 2615;
+	R_gamma_alpha_vector_request = 2616;
+	V_alpha_beta_vector_request = 2617;
+	V_beta_gamma_vector_request = 2618;
+	V_gamma_alpha_vector_request = 2619;
+	/*-------------------------------*/
 
-/*-------------------------------*/
-RW_request = 2801;
-D_chip_temp_request = 2802;
-D_chip_current_request = 2803;
-D_chip_voltage_request = 2804;
-/*-------------------------------*/
+	/*-------------------------------*/
+	STX_request = 2701;
+	B_Current_W_eigth_RF_request = 2702;
+	B_Current_W_quarter_RF_request = 2703;
+	B_Current_W_half_RF_request = 2704;
+	B_Current_W_1_RF_request = 2705;
+	B_voltage_request = 2706;
+	PA_current_request = 2707;
+	PA_voltage_request = 2708;
+	PA_temp_request = 2709;
+	RF_out_power_request = 2710;
+	top_b_temp_request = 2711;
+	bot_b_temp_request = 2712;
+	/*-------------------------------*/
 
-safe_mode = 4401;
+	/*-------------------------------*/
+	RW_request = 2801;
+	D_chip_temp_request = 2802;
+	D_chip_current_request = 2803;
+	D_chip_voltage_request = 2804;
+	/*-------------------------------*/
 
+	safe_mode = 4401;
+}
 
 typedef struct{
 
@@ -102,7 +105,7 @@ uart_dev uart_devices[UART_DEVS_IN_SYSTEM];
 rtems_task Task_Collect( rtems_task_argument unused )
 {
 	int i;
-
+	init_vars();
 
 	/* monitor all components by default */
 	for (i=0; i < N_COMPS; i++)
