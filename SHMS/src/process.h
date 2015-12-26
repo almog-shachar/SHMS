@@ -31,10 +31,11 @@ int nq;				// queue size
 
 rtems_task Task_Process( rtems_task_argument);
 void process_gps(GPS_struct*,int);
-void process_sun_s(pnode*);
-void process_rw(pnode*);
-void process_uhf(pnode*);
-void process_ocm(pnode*);
+void process_sun_s(SUN_S_struct*);
+void process_rw(RW_struct*);
+void process_uhf(UHF_struct*);
+void process_ocm(OCM_struct*);
+void process_stx(STX_struct*);
 
 
 #endif /* PROCESS_H_ */

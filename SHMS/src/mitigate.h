@@ -23,6 +23,13 @@ typedef struct {
 }CBR_task;
 
 int CBR_val = 0;
+int CBR_gps1 = 0;
+int CBR_gps2 = 0;
+int CBR_rw = 0;
+int CBR_ocm = 0;
+int CBR_stx = 0;
+int CBR_uhf = 0;
+int CBR_sun_s = 0;
 
 
 

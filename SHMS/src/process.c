@@ -1,5 +1,5 @@
 #include "process.h"
-
+#include "mitigate.h"
 
 rtems_task Task_Process( rtems_task_argument unused )
 {
@@ -43,15 +43,92 @@ void process_gps(GPS_struct* GPS_data,int gpsnum)
 	if (GPS_data == NULL)	// GPS_data is set to null means that no data could be extracted from GPS component.
 	{
 		if(gpsnum == GPS1)
+		{
 			CBR_val = CBR_val | 1; //set the proper gps cbr bit on.
+		}
 		else if(gpsnum == GPS2)
+		{
 			CBR_val = CBR_val | 2; //set the proper gps cbr bit on.
+		}
+	}
+
+	else
+	{
+		if(gpsnum == GPS1)
+		{
+			if(GPS_data->Xpos>80 || GPS_data->Xpos<20)
+			{
+				CBR_gps1 = CBR_gps1 | 1;
+				CBR_gps1 = CBR_gps1 | 2;
+			}
+
+			if(GPS_data->Xpos>80)
+			{
+				CBR_gps1 = CBR_gps1 | 1;
+				CBR_gps1 = CBR_gps1 | 2;
+			}
+			if(GPS_data->Xpos>80)
+			{
+				CBR_gps1 = CBR_gps1 | 1;
+				CBR_gps1 = CBR_gps1 | 2;
+			}
+			if(GPS_data->Xpos>80)
+			{
+				CBR_gps1 = CBR_gps1 | 1;
+				CBR_gps1 = CBR_gps1 | 2;
+			}
+			if(GPS_data->Xpos>80)
+			{
+				CBR_gps1 = CBR_gps1 | 1;
+				CBR_gps1 = CBR_gps1 | 2;
+			}
+			if(GPS_data->Xpos>80)
+			{
+				CBR_gps1 = CBR_gps1 | 1;
+				CBR_gps1 = CBR_gps1 | 2;
+			}
+			if(GPS_data->Xpos>80)
+			{
+				CBR_gps1 = CBR_gps1 | 1;
+				CBR_gps1 = CBR_gps1 | 2;
+			}
+
+
+		}
+		else if(gpsnum == GPS2)
+		{
+			CBR_val = CBR_val | 2; //set the proper gps cbr bit on.
+		}
+	}
+
 
 		CBR_case_resolver();	//find the matching case.
-
-	}
 }
 
+void process_sun_s(SUN_S_struct* SUN_S_data)
+{
+
+}
+
+void process_rw(RW_struct* RW_data)
+{
+
+}
+
+void process_uhf(UHF_struct* UHF_data)
+{
+
+}
+
+void process_ocm(OCM_struct* OCM_data)
+{
+
+}
+
+void process_stx(STX_struct* STX_data)
+{
+
+}
 
 
 /* processing queue management functions. */
