@@ -22,8 +22,6 @@
 #include <errno.h>
 #include <stdbool.h>
 
-rtems_task Init( rtems_task_argument argument);
-
 #define CONFIGURE_INIT
 #define CONFIGURE_APPLICATION_NEEDS_CONSOLE_DRIVER
 #define CONFIGURE_APPLICATION_NEEDS_CLOCK_DRIVER
@@ -75,6 +73,8 @@ enum monitored_components {GPS1,GPS2,SUN_S,RW,STX,UHF,OCM};
 enum res {SUCCESS,FAILURE};
 extern rtems_id   Task_id[ 4 ];         /* array of task ids */
 extern rtems_name Task_name[ 4 ];       /* array of task names */
+rtems_task Init( rtems_task_argument argument);
+
 
 volatile enum monitored_components monitoredc[N_COMPS];
 volatile enum monitored_components irrisponsive[N_COMPS];
