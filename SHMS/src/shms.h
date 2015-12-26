@@ -33,7 +33,6 @@
 #define RX_BUF_LEN 4		//in bytes
 #define TX_BUF_LEN 4
 #define N_COMPS 6
-#define CONFIGURE_APPLICATION_NEEDS_TIMER_DRIVER
 
 #define put_name( _name, _crlf ) \
   do { \
