@@ -62,46 +62,67 @@ void process_gps(GPS_struct* GPS_data,int gpsnum)
 				CBR_gps1 = CBR_gps1 | 2;
 			}
 
-			if(GPS_data->Xpos>80)
+			if(GPS_data->Ypos>90 || GPS_data->Ypos <19)
 			{
 				CBR_gps1 = CBR_gps1 | 1;
-				CBR_gps1 = CBR_gps1 | 2;
+				CBR_gps1 = CBR_gps1 | 3;
 			}
-			if(GPS_data->Xpos>80)
+			if(GPS_data->Zpos>85 || GPS_data->Zpos <22)
 			{
 				CBR_gps1 = CBR_gps1 | 1;
-				CBR_gps1 = CBR_gps1 | 2;
+				CBR_gps1 = CBR_gps1 | 4;
 			}
-			if(GPS_data->Xpos>80)
+			if(GPS_data->Xval>50 || GPS_data->Xval <12)
 			{
 				CBR_gps1 = CBR_gps1 | 1;
-				CBR_gps1 = CBR_gps1 | 2;
+				CBR_gps1 = CBR_gps1 | 5;
 			}
-			if(GPS_data->Xpos>80)
+			if(GPS_data->Yval>55 || GPS_data->Yval<10)
 			{
 				CBR_gps1 = CBR_gps1 | 1;
-				CBR_gps1 = CBR_gps1 | 2;
+				CBR_gps1 = CBR_gps1 | 6;
 			}
-			if(GPS_data->Xpos>80)
+			if(GPS_data->Zval>70 || GPS_data->Zval<18)
 			{
 				CBR_gps1 = CBR_gps1 | 1;
-				CBR_gps1 = CBR_gps1 | 2;
+				CBR_gps1 = CBR_gps1 | 7;
 			}
-			if(GPS_data->Xpos>80)
-			{
-				CBR_gps1 = CBR_gps1 | 1;
-				CBR_gps1 = CBR_gps1 | 2;
-			}
-
-
 		}
 		else if(gpsnum == GPS2)
 		{
-			CBR_val = CBR_val | 2; //set the proper gps cbr bit on.
+			if(GPS_data->Xpos>80 || GPS_data->Xpos<20)
+			{
+				CBR_gps2 = CBR_gps2 | 1;
+				CBR_gps2 = CBR_gps2 | 2;
+			}
+
+			if(GPS_data->Ypos>90 || GPS_data->Ypos <19)
+			{
+				CBR_gps2 = CBR_gps2 | 1;
+				CBR_gps2 = CBR_gps2 | 3;
+			}
+			if(GPS_data->Zpos>85 || GPS_data->Zpos <22)
+			{
+				CBR_gps2 = CBR_gps2 | 1;
+				CBR_gps2 = CBR_gps2 | 4;
+			}
+			if(GPS_data->Xval>50 || GPS_data->Xval <12)
+			{
+				CBR_gps2 = CBR_gps2 | 1;
+				CBR_gps2 = CBR_gps2 | 5;
+			}
+			if(GPS_data->Yval>55 || GPS_data->Yval<10)
+			{
+				CBR_gps2 = CBR_gps2 | 1;
+				CBR_gps2 = CBR_gps2 | 6;
+			}
+			if(GPS_data->Zval>70 || GPS_data->Zval<18)
+			{
+				CBR_gps2 = CBR_gps2 | 1;
+				CBR_gps2 = CBR_gps2 | 7;
+			}
 		}
 	}
-
-
 		CBR_case_resolver();	//find the matching case.
 }
 
