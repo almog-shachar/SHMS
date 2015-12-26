@@ -627,6 +627,8 @@ int set_uart_attribs(int fd, int speed, int parity)
 	enum res request_info_mock(int dev, int *data, unsigned int request)
 	{
 		time_t t;
+		void* time_buffer;
+		rtems_time_of_day* time;
 
 		/* Intializes random number generator */
 		srand((unsigned) time(&t));
@@ -664,8 +666,8 @@ int set_uart_attribs(int fd, int speed, int parity)
 		}
 		else if (request == GPSTime_request)
 		{
-			*data = rand() % 100;
-			return SUCCESS;
+			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
+			time = (rtems_time_of_day*)time_buffer;
 		}
 
 

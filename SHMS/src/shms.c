@@ -16,13 +16,14 @@ rtems_name Task_name[ 4 ];       /* array of task names */
 rtems_task Init( rtems_task_argument ignored)
 {
 
+
 	  rtems_time_of_day time;
 	  int i;
 	  time.year   = 2015;
-	  time.month  = 8;
-	  time.day    = 18;
-	  time.hour   = 11;
-	  time.minute = 25;
+	  time.month  = 12;
+	  time.day    = 26;
+	  time.hour   = 15;
+	  time.minute = 23;
 	  time.second = 15;
 	  time.ticks  = 0;
 	  status = rtems_clock_set( &time );
