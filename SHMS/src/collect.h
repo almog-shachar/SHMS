@@ -43,7 +43,6 @@ unsigned int GPS_request;
 	unsigned int Xval_request;
 	unsigned int Yval_request;
 	unsigned int Zval_request;
-	unsigned int GPSTime_request;
 	unsigned int gps_off;
 /*-------------------------------*/
 
@@ -109,6 +108,7 @@ unsigned int RW_request;
 /*-------------------------------*/
 
 unsigned int safe_mode;
+unsigned int time_request;
 
 #define UART_A 0
 #define UART_B 1
@@ -126,6 +126,12 @@ rtems_task Task_Init_UHF();
 rtems_task Task_Collect_UHF();
 
 enum res request_info(int, int*, unsigned int);
+enum res request_info_mock_gps(int, int* , unsigned int );
+enum res request_info_mock_sun_s(int , int *, unsigned int );
+enum res request_info_mock_uhf(int , int *, unsigned int );
+enum res request_info_mock_stx(int , int *, unsigned int );
+enum res request_info_mock_rw(int , int *, unsigned int );
+enum res request_info_mock_ocm(int , int *, unsigned int);
 
 int set_uart_attribs(int, int, int);
 

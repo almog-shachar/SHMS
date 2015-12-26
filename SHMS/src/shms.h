@@ -86,8 +86,8 @@ typedef struct{
 	int Xval;
 	int Yval;
 	int Zval;
-	int GPSTime;
-	int ready;
+	int time;
+	//int ready;
 } GPS_struct;
 
 typedef struct{
@@ -98,6 +98,7 @@ typedef struct{
 	int SMPS_temp;
 	int PA_temp;
 	int RSSI;
+	int time;
 }UHF_struct;
 
 typedef struct{
@@ -119,6 +120,7 @@ typedef struct{
   	int V_alpha_beta_vector;
   	int V_beta_gamma_vector;
   	int V_gamma_alpha_vector;
+  	int time;
 }OCM_struct;
 
 typedef struct{
@@ -133,18 +135,20 @@ typedef struct{
 	int RF_out_power;
 	int top_b_temp;
 	int bot_b_temp;
-
+	int time;
 }STX_struct;
 
 typedef struct{
 	int fit_quality;
 	int geometry_quality;
+	int time;
 }SUN_S_struct;
 
 typedef struct{
 	int D_chip_temp;
 	int D_chip_current;
 	int D_chip_voltage;
+	int time;
 }RW_struct;
 
 

@@ -20,7 +20,6 @@ void init_vars()
 	Xval_request = 2305;
 	Yval_request = 2306;
 	Zval_request = 2307;
-	GPSTime_request = 2308;
 	gps_off = 2309;
 	/*-------------------------------*/
 
@@ -85,6 +84,7 @@ void init_vars()
 	D_chip_voltage_request = 2804;
 	/*-------------------------------*/
 
+	time_request = 2308;
 	safe_mode = 4401;
 	}
 
@@ -274,7 +274,7 @@ rtems_task Task_Collect_GPS ()
 					(request_info(UART_C, &(GPS_data->Xval), Xval_request) == FAILURE) ||
 					(request_info(UART_C, &(GPS_data->Yval), Yval_request) == FAILURE) ||
 					(request_info(UART_C, &(GPS_data->Zval), Zval_request) == FAILURE) ||
-					(request_info(UART_C, &(GPS_data->GPSTime), GPSTime_request) == FAILURE) 	)			// retrieve gps data
+					(request_info(UART_C, &(GPS_data->time), time_request) == FAILURE) 	)			// retrieve gps data
 					GPS_data = NULL;
 			else
 				enq((void*)GPS_data); // enqueue for processing
@@ -309,10 +309,14 @@ rtems_task Task_Collect_SUN_S ()
 	{
 		if( (SUN_S_data = (SUN_S_struct*)malloc(sizeof(SUN_S_struct))) != NULL)	// allocate memory for SUN_S data node
 		{
-			request_info(UART_C, &(SUN_S_data->fit_quality), fit_quality_request);	// retrieve fit data
-			request_info(UART_C, &(SUN_S_data->geometry_quality), geometry_quality_request);	// retrieve geometry data
+			if(		(request_info(UART_C, &(SUN_S_data->fit_quality), fit_quality_request) == FAILURE) ||	// retrieve fit data
+					(request_info(UART_C, &(SUN_S_data->geometry_quality), geometry_quality_request) == FAILURE) ||	// retrieve geometry data
+					(request_info(UART_C, &(SUN_S_data->time), time_request) == FAILURE))
+			SUN_S_data = NULL;
+		else
+			enq((void*)SUN_S_data); // enqueue for processing
 		}
-		enq((void*)SUN_S_data); // enqueue for processing
+
 		sleep(180); // next collection phase in 3 minutes.
 	}
 }
@@ -343,11 +347,16 @@ rtems_task Task_Collect_RW ()
 	{
 		if( (RW_data = (RW_struct*)malloc(sizeof(RW_struct))) != NULL)	// allocate memory for RW data node
 		{
-			request_info(UART_C, &(RW_data->D_chip_temp), D_chip_temp_request);	// retrieve RW data
-			request_info(UART_C, &(RW_data->D_chip_current), D_chip_current_request);
-			request_info(UART_C, &(RW_data->D_chip_voltage), D_chip_voltage_request);
+
+			if( 	request_info(UART_C, &(RW_data->D_chip_temp), D_chip_temp_request) == FAILURE ||	// retrieve RW data
+					request_info(UART_C, &(RW_data->D_chip_current), D_chip_current_request) == FAILURE ||
+					request_info(UART_C, &(RW_data->D_chip_voltage), D_chip_voltage_request) == FAILURE ||
+					request_info(UART_C, &(RW_data->time), time_request) == FAILURE)
+				RW_data = NULL;
+			else
+				enq((void*)RW_data); // enqueue for processing
 		}
-		enq((void*)RW_data); // enqueue for processing
+
 		sleep(180); // next collection phase in 3 minutes.
 	}
 }
@@ -378,19 +387,23 @@ rtems_task Task_Collect_STX ()
 	{
 		if( (STX_data = (STX_struct*) malloc (sizeof(STX_struct))) != NULL)	// allocate memory for STX data node
 		{
-			request_info(UART_C, &(STX_data->B_Current_W_eigth_RF), B_Current_W_eigth_RF_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->B_Current_W_quarter_RF), B_Current_W_quarter_RF_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->B_Current_W_half_RF), B_Current_W_half_RF_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->B_Current_W_1_RF), B_Current_W_1_RF_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->B_voltage), B_voltage_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->PA_current), PA_current_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->PA_voltage), PA_voltage_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->PA_temp), PA_temp_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->RF_out_power), RF_out_power_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->top_b_temp), top_b_temp_request);	// retrieve STX data
-			request_info(UART_C, &(STX_data->bot_b_temp), bot_b_temp_request);	// retrieve STX data
+			if(		request_info(UART_C, &(STX_data->B_Current_W_eigth_RF), B_Current_W_eigth_RF_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->B_Current_W_quarter_RF), B_Current_W_quarter_RF_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->B_Current_W_half_RF), B_Current_W_half_RF_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->B_Current_W_1_RF), B_Current_W_1_RF_request) == FAILURE ||// retrieve STX data
+					request_info(UART_C, &(STX_data->B_voltage), B_voltage_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->PA_current), PA_current_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->PA_voltage), PA_voltage_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->PA_temp), PA_temp_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->RF_out_power), RF_out_power_request) == FAILURE || 	// retrieve STX data
+					request_info(UART_C, &(STX_data->top_b_temp), top_b_temp_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->bot_b_temp), bot_b_temp_request) == FAILURE ||	// retrieve STX data
+					request_info(UART_C, &(STX_data->time), time_request) == FAILURE)
+						STX_data = NULL;
+			else
+				enq((void*)STX_data); // enqueue for processing
 		}
-		enq((void*)STX_data); // enqueue for processing
+
 		sleep(180); // next collection phase in 3 minutes.
 	}
 }
@@ -404,26 +417,30 @@ rtems_task Task_Collect_OCM ()
 	{
 		if( (OCM_data = (OCM_struct*) malloc (sizeof(OCM_struct))) != NULL)	// allocate memory for OCM data node
 		{
-			request_info(UART_C, &(OCM_data->sma), sma_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->ecc), ecc_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->inc), inc_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->arg), arg_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->raan), raan_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->tra), tra_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->sma_mean), sma_mean_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->ecc_mean), ecc_mean_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->inc_mean), inc_mean_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->arg_mean), arg_mean_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->raan_mean), raan_mean_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->true_mean_an), true_mean_an_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->R_alpha_beta_vector), R_alpha_beta_vector_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->R_beta_gamma_vector), R_beta_gamma_vector_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->R_gamma_alpha_vector), R_gamma_alpha_vector_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->V_alpha_beta_vector), V_alpha_beta_vector_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->V_beta_gamma_vector), V_beta_gamma_vector_request);	// retrieve OCM data
-			request_info(UART_C, &(OCM_data->V_gamma_alpha_vector), V_gamma_alpha_vector_request);	// retrieve OCM data
+			if( 	request_info(UART_C, &(OCM_data->sma), sma_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->ecc), ecc_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->inc), inc_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->arg), arg_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->raan), raan_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->tra), tra_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->sma_mean), sma_mean_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->ecc_mean), ecc_mean_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->inc_mean), inc_mean_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->arg_mean), arg_mean_request) == FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->raan_mean), raan_mean_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->true_mean_an), true_mean_an_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->R_alpha_beta_vector), R_alpha_beta_vector_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->R_beta_gamma_vector), R_beta_gamma_vector_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->R_gamma_alpha_vector), R_gamma_alpha_vector_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->V_alpha_beta_vector), V_alpha_beta_vector_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->V_beta_gamma_vector), V_beta_gamma_vector_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->V_gamma_alpha_vector), V_gamma_alpha_vector_request)== FAILURE ||	// retrieve OCM data
+					request_info(UART_C, &(OCM_data->time), time_request)== FAILURE)
+						OCM_data = NULL;
+			else
+				enq((void*)OCM_data); // enqueue for processing
 		}
-		enq((void*)OCM_data); // enqueue for processing
+
 		sleep(180); // next collection phase in 3 minutes.
 	}
 }
@@ -454,15 +471,20 @@ rtems_task Task_Collect_UHF ()
 	{
 		if( (UHF_data = (UHF_struct*)malloc(sizeof(UHF_struct))) != NULL)	// allocate memory for gps data node
 		{
-			request_info(UART_C, &(UHF_data->V33_current), V33_current_request);	// retrieve gps data
-			request_info(UART_C, &(UHF_data->V33_voltage), V33_voltage_request);
-			request_info(UART_C, &(UHF_data->V5_current), V5_current_request);
-			request_info(UART_C, &(UHF_data->V5_voltage), V5_voltage_request);
-			request_info(UART_C, &(UHF_data->SMPS_temp), SMPS_temp_request);
-			request_info(UART_C, &(UHF_data->PA_temp), PA_temp_request);
-			request_info(UART_C, &(UHF_data->RSSI), RSSI_request);
+			if(		request_info(UART_C, &(UHF_data->V33_current), V33_current_request)== FAILURE ||	// retrieve gps data
+					request_info(UART_C, &(UHF_data->V33_voltage), V33_voltage_request)== FAILURE ||
+					request_info(UART_C, &(UHF_data->V5_current), V5_current_request)== FAILURE ||
+					request_info(UART_C, &(UHF_data->V5_voltage), V5_voltage_request)== FAILURE ||
+					request_info(UART_C, &(UHF_data->SMPS_temp), SMPS_temp_request)== FAILURE ||
+					request_info(UART_C, &(UHF_data->PA_temp), PA_temp_request)== FAILURE ||
+					request_info(UART_C, &(UHF_data->RSSI), RSSI_request)== FAILURE ||
+					request_info(UART_C, &(UHF_data->time), time_request)== FAILURE)
+						UHF_data = NULL;
+
+			else
+				enq((void*)UHF_data); // enqueue for processing
 		}
-		enq((void*)UHF_data); // enqueue for processing
+
 		sleep(180); // next collection phase in 3 minutes.
 	}
 }
@@ -624,11 +646,11 @@ int set_uart_attribs(int fd, int speed, int parity)
 		return SUCCESS;
 	}
 
-	enum res request_info_mock(int dev, int *data, unsigned int request)
+	enum res request_info_mock_gps(int dev, int *data, unsigned int request)
 	{
 		time_t t;
 		void* time_buffer;
-		rtems_time_of_day* time;
+		rtems_time_of_day* time_of_day;
 
 		/* Intializes random number generator */
 		srand((unsigned) time(&t));
@@ -664,17 +686,257 @@ int set_uart_attribs(int fd, int speed, int parity)
 			*data = rand() % 100;
 			return SUCCESS;
 		}
-		else if (request == GPSTime_request)
+		else if (request == time_request)
 		{
 			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
-			time = (rtems_time_of_day*)time_buffer;
+			time_of_day = (rtems_time_of_day*)time_buffer;
 		}
-
 
 		*data = -1;
 		return FAILURE;
 
 	}
+
+	enum res request_info_mock_sun_s(int dev, int *data, unsigned int request)
+	{
+		time_t t;
+		void* time_buffer;
+		rtems_time_of_day* time_of_day;
+
+		/* Intializes random number generator */
+		srand((unsigned) time(&t));
+
+		if(request == fit_quality_request)
+		{
+			*data = (rand() %(1-(-1)))+(-1);
+			return SUCCESS;
+		}
+		else if (request == geometry_quality_request)
+		{
+			*data = (rand()%(0-(-1)))+(-1);
+			return SUCCESS;
+		}
+		else if (request == time_request)
+		{
+			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
+			time_of_day = (rtems_time_of_day*)time_buffer;
+		}
+
+		*data = -1;
+		return FAILURE;
+	}
+
+	enum res request_info_mock_rw(int dev, int *data, unsigned int request)
+	{
+		time_t t;
+		void* time_buffer;
+		rtems_time_of_day* time_of_day;
+
+		/* Intializes random number generator */
+		srand((unsigned) time(&t));
+
+		if(request == D_chip_temp_request)
+		{
+			*data = rand() % 300;
+			return SUCCESS;
+		}
+		else if (request == D_chip_current_request)
+		{
+			*data = rand() % 10;
+			return SUCCESS;
+		}
+		else if (request == D_chip_voltage_request)
+		{
+			*data = rand() % 40;
+			return SUCCESS;
+		}
+		else if (request == time_request)
+		{
+			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
+			time_of_day = (rtems_time_of_day*)time_buffer;
+		}
+
+		*data = -1;
+		return FAILURE;
+	}
+
+	enum res request_info_mock_uhf(int dev, int *data, unsigned int request)
+	{
+		time_t t;
+				void* time_buffer;
+				rtems_time_of_day* time_of_day;
+
+				/* Intializes random number generator */
+				srand((unsigned) time(&t));
+
+
+				if(request == V33_current_request)
+				{
+					*data = (rand() %(70-40))+40;
+					return SUCCESS;
+				}
+				else if (request == V33_voltage_request)
+				{
+					*data = (rand() %(5-2))+2;
+					return SUCCESS;
+				}
+				else if (request == V5_current_request)
+				{
+					*data = rand() % 60;
+					return SUCCESS;
+				}
+				else if (request == V5_voltage_request)
+				{
+					*data = (rand() %(15-7))+7;
+					return SUCCESS;
+				}
+				else if (request == SMPS_temp_request)
+				{
+					*data = (rand() %(120-(-70)))+(-70);
+					return SUCCESS;
+				}
+				else if (request == RSSI_request)
+				{
+					*data = rand() % 30;
+					return SUCCESS;
+				}
+		else if (request == time_request)
+		{
+			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
+			time_of_day = (rtems_time_of_day*)time_buffer;
+		}
+
+		*data = -1;
+		return FAILURE;
+	}
+
+	enum res request_info_mock_stx(int dev, int *data, unsigned int request)
+	{
+		time_t t;
+		void* time_buffer;
+		rtems_time_of_day* time_of_day;
+
+		/* Intializes random number generator */
+		srand((unsigned) time(&t));
+
+
+		if(request == B_Current_W_eigth_RF_request)
+		{
+			*data = (rand() %(33-31))+31;
+			return SUCCESS;
+		}
+		else if (request == B_Current_W_quarter_RF_request)
+		{
+			*data = (rand() % (43-41))+41;
+			return SUCCESS;
+		}
+		else if (request == B_Current_W_half_RF_request)
+		{
+			*data = (rand() %(56-54))+54;
+			return SUCCESS;
+		}
+		else if (request == B_Current_W_1_RF_request)
+		{
+			*data = (rand() % (84-82))+82;
+			return SUCCESS;
+		}
+		else if (request == B_voltage_request)
+		{
+			*data = (rand() %(15-4))+4;
+			return SUCCESS;
+		}
+		else if (request == PA_current_request)
+		{
+			*data = rand() % 100;
+			return SUCCESS;
+		}
+		else if (request == PA_voltage_request)
+			{
+				*data = (rand() %(15-13))+13;
+				return SUCCESS;
+			}
+		else if (request == PA_temp_request)
+			{
+				*data = (rand() %(100-(-50)))+(-50);
+				return SUCCESS;
+			}
+		else if (request == RF_out_power_request)
+			{
+				*data = (rand() %(30-20))+20;
+				return SUCCESS;
+			}
+		else if (request == top_b_temp_request)
+			{
+				*data =(rand() %(70-(-30)))+(-30);
+				return SUCCESS;
+			}
+		else if (request == bot_b_temp_request)
+			{
+				*data = (rand() %(70-(-30)))+(-30);
+				return SUCCESS;
+			}
+
+		else if (request == time_request)
+		{
+			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
+			time_of_day = (rtems_time_of_day*)time_buffer;
+		}
+
+		*data = -1;
+		return FAILURE;
+	}
+
+	enum res request_info_mock_ocm(int dev, int *data, unsigned int request)
+	{
+		time_t t;
+				void* time_buffer;
+				rtems_time_of_day* time_of_day;
+
+				/* Intializes random number generator */
+				srand((unsigned) time(&t));
+
+
+				if(request == Xpos_request)
+				{
+					*data = rand() % 100;
+					return SUCCESS;
+				}
+				else if (request == Ypos_request)
+				{
+					*data = rand() % 100;
+					return SUCCESS;
+				}
+				else if (request == Zpos_request)
+				{
+					*data = rand() % 100;
+					return SUCCESS;
+				}
+				else if (request == Xval_request)
+				{
+					*data = rand() % 100;
+					return SUCCESS;
+				}
+				else if (request == Yval_request)
+				{
+					*data = rand() % 100;
+					return SUCCESS;
+				}
+				else if (request == Zval_request)
+				{
+					*data = rand() % 100;
+					return SUCCESS;
+				}
+
+		else if (request == time_request)
+		{
+			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
+			time = (rtems_time_of_day*)time_buffer;
+		}
+
+		*data = -1;
+		return FAILURE;
+	}
+
 
 /*CODE DUMP*/
 /*
