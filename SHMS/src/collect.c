@@ -772,7 +772,7 @@ int set_uart_attribs(int fd, int speed, int parity)
 
 				if(request == V33_current_request)
 				{
-					*data = (rand() %(70-40))+40;
+					*data = (rand() %(80-40))+40;
 					return SUCCESS;
 				}
 				else if (request == V33_voltage_request)
@@ -787,7 +787,7 @@ int set_uart_attribs(int fd, int speed, int parity)
 				}
 				else if (request == V5_voltage_request)
 				{
-					*data = (rand() %(15-7))+7;
+					*data = (rand() %(20-4))+4;
 					return SUCCESS;
 				}
 				else if (request == SMPS_temp_request)
@@ -822,7 +822,7 @@ int set_uart_attribs(int fd, int speed, int parity)
 
 		if(request == B_Current_W_eigth_RF_request)
 		{
-			*data = (rand() %(33-31))+31;
+			*data = (rand() %(32-30))+30;
 			return SUCCESS;
 		}
 		else if (request == B_Current_W_quarter_RF_request)
@@ -889,48 +889,107 @@ int set_uart_attribs(int fd, int speed, int parity)
 	enum res request_info_mock_ocm(int dev, int *data, unsigned int request)
 	{
 		time_t t;
-				void* time_buffer;
-				rtems_time_of_day* time_of_day;
+		void* time_buffer;
+		rtems_time_of_day* time_of_day;
 
-				/* Intializes random number generator */
-				srand((unsigned) time(&t));
+		/* Intializes random number generator */
+		srand((unsigned) time(&t));
 
-
-				if(request == Xpos_request)
-				{
-					*data = rand() % 100;
-					return SUCCESS;
-				}
-				else if (request == Ypos_request)
-				{
-					*data = rand() % 100;
-					return SUCCESS;
-				}
-				else if (request == Zpos_request)
-				{
-					*data = rand() % 100;
-					return SUCCESS;
-				}
-				else if (request == Xval_request)
-				{
-					*data = rand() % 100;
-					return SUCCESS;
-				}
-				else if (request == Yval_request)
-				{
-					*data = rand() % 100;
-					return SUCCESS;
-				}
-				else if (request == Zval_request)
-				{
-					*data = rand() % 100;
-					return SUCCESS;
-				}
+		if(request == sma_request)
+		{
+			*data = (rand() %(7200-6700))+6700;
+			return SUCCESS;
+		}
+		else if (request == ecc_request)
+		{
+			*data = (float)rand() %0.2;
+			return SUCCESS;
+		}
+		else if (request == inc_request)
+		{
+			*data = (float)rand() % (3.14);
+			return SUCCESS;
+		}
+		else if (request == arg_request)
+		{
+			*data = (float)rand() %(3.14*2);
+			return SUCCESS;
+		}
+		else if (request == raan_request)
+		{
+			*data = (float)rand() %(3.14*2);
+			return SUCCESS;
+		}
+		else if (request == tra_request)
+		{
+			*data = (float)rand() %(3.14*2);
+			return SUCCESS;
+		}
+		else if (request == sma_mean_request)
+		{
+			*data = (rand() %(7200-6700))+6700;
+			return SUCCESS;
+		}
+		else if (request == ecc_mean_request)
+		{
+			*data = (float)rand() %0.1;
+			return SUCCESS;
+		}
+		else if (request == inc_mean_request)
+		{
+			*data = (float)rand() % (3.14);
+			return SUCCESS;
+		}
+		else if (request == arg_mean_request)
+		{
+			*data = (float)rand() %(3.14*2);
+			return SUCCESS;
+		}
+		else if (request == raan_mean_request)
+		{
+			*data = (float)rand() %(3.14*2);
+			return SUCCESS;
+		}
+		else if (request == true_mean_an_request)
+		{
+			*data = (float)rand() %(3.14*2);
+			return SUCCESS;
+		}
+		else if (request == R_alpha_beta_vector_request)
+		{
+			*data = (rand() %(10000-(-10000)))+(-10000);
+			return SUCCESS;
+		}
+		else if (request == R_beta_gamma_vector_request)
+		{
+			*data = (rand() %(10000-(-10000)))+(-10000);
+			return SUCCESS;
+		}
+		else if (request == R_gamma_alpha_vector_request)
+		{
+			*data = (rand() %(10000-(-10000)))+(-10000);
+			return SUCCESS;
+		}
+		else if (request == V_alpha_beta_vector_request)
+		{
+			*data = (rand() %(10-(-10)))+(-10);
+			return SUCCESS;
+		}
+		else if (request == V_beta_gamma_vector_request)
+		{
+			*data = (rand() %(10-(-10)))+(-10);
+			return SUCCESS;
+		}
+		else if (request == V_gamma_alpha_vector_request)
+		{
+			*data = (rand() %(10-(-10)))+(-10);
+			return SUCCESS;
+		}
 
 		else if (request == time_request)
 		{
 			rtems_status_code rtems_clock_get(RTEMS_CLOCK_GET_TOD  ,   *time_buffer);
-			time = (rtems_time_of_day*)time_buffer;
+			time_of_day = (rtems_time_of_day*)time_buffer;
 		}
 
 		*data = -1;
